@@ -24,6 +24,9 @@ class URL:
                 )
 
         s.connect((self.host, self.port))
+        if self.scheme == "https":
+            ctx = ssl.create_default_context()
+            s = ctx.wrap_socket(s, server_hostname=self.host)
 
         request = "GET {} HTTP/1.0\r\n".format(self.path)
         request += "HOST: {}\r\n".format(self.host)
@@ -67,6 +70,3 @@ def load(url):
 if __name__ == "__main__":
     import sys
     load(URL(sys.argv[1]))
-
-ctx = ssl.create_default_context()
-s = ctx.wrap_socket(s, server_hostname=host)
