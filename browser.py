@@ -62,3 +62,6 @@ def load(url):
 if __name__ == "__main__":
     import sys
     load(URL(sys.argv[1]))
+
+ctx = ssl.create_default_context()
+s = ctx.wrap_socket(s, server_hostname=host)
