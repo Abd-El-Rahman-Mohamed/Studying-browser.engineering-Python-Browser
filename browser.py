@@ -1,15 +1,20 @@
 import socket
 import ssl
+from os import system
 
 class URL:
     def __init__(self, url):
         self.scheme, url = url.split("://", 1)
-        assert self.scheme in ["http", "https"]
+        assert self.scheme in ["http", "https", "file"]
         
         if self.scheme == "http":
             self.port = 80
         elif self.scheme == "https":
             self.port = 443
+        elif self.scheme == "file":
+#            readfile(url)
+             system(f"cat {url}")
+             return
 
         if "/" not in url:
             url = url + "/"
@@ -34,6 +39,8 @@ class URL:
 
         request = "GET {} HTTP/1.0\r\n".format(self.path)
         request += "HOST: {}\r\n".format(self.host)
+        request += "Connection: close\r\n".format(self.host)
+        request += "User-Agent: Arch Linux (x86_64; Linux 6.12.10-arch1-1)\r\n".format(self.host)
         request += "\r\n"
         s.send(request.encode("utf-8"))
 
@@ -68,8 +75,10 @@ def show(body):
             print(c, end="")
 
 def load(url):
-    body = url.request()
-    show(body)
+    if(url.scheme != "file"):
+        body = url.request()
+        show(body)
+
 
 if __name__ == "__main__":
     import sys
